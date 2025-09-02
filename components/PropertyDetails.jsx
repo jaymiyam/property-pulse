@@ -6,8 +6,11 @@ import {
   FaCheck,
   FaMapMarker,
 } from 'react-icons/fa';
+import PropertyMap from './PropertyMap';
 
 const PropertyDetails = ({ property }) => {
+  const addressString = `${property.location.street},${property.location.city},${property.location.state}`;
+
   return (
     <main>
       <div className="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
@@ -88,6 +91,9 @@ const PropertyDetails = ({ property }) => {
             </li>
           ))}
         </ul>
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+        <PropertyMap address={addressString} />
       </div>
     </main>
   );
