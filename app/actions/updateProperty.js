@@ -1,37 +1,27 @@
 'use server';
+
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
-import cloudinary from '@/config/cloudinary';
 import { getSessionUser } from '@/utils/getSessionUser';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-async function addProperty(formData) {
+async function updateProperty(propertyId, formData) {
   await connectDB();
 
-  //   get current user information from session
   const sessionUser = await getSessionUser();
 
   if (!sessionUser || !sessionUser.userId) {
     throw new Error('User id is required');
   }
 
-  const amenities = formData.getAll('amenities');
-  const imageUrls = [];
-  const images = formData.getAll('images').filter((image) => image.name !== '');
+  const existingProperty = await Property.findById(propertyId);
 
-  for (const image of images) {
-    const imageBuffer = await image.arrayBuffer();
-    const imageData = Buffer.from(imageBuffer);
-    const imageString = imageData.toString('base64');
-    const dataUri = `data:image/png;base64,${imageString}`;
-
-    const result = await cloudinary.uploader.upload(dataUri, {
-      folder: 'property-pulse',
-    });
-
-    imageUrls.push(result.secure_url);
+  if (existingProperty.owner.toString() !== sessionUser.userId) {
+    throw new Error('Current user does not own this property.');
   }
+
+  const amenities = formData.getAll('amenities');
 
   const propertyData = {
     owner: sessionUser.userId,
@@ -58,17 +48,17 @@ async function addProperty(formData) {
       email: formData.get('seller_info.email'),
       phone: formData.get('seller_info.phone'),
     },
-    images: imageUrls,
   };
 
-  // save the new property to database
-  const newProperty = new Property(propertyData);
-  await newProperty.save();
+  const updatedProperty = await Property.findByIdAndUpdate(
+    propertyId,
+    propertyData
+  );
 
   // purge the cache of index page and update the data with new property
   revalidatePath('/', 'layout');
   //   redirect to new property's page
-  redirect(`/properties/${newProperty._id}`);
+  redirect(`/properties/${updatedProperty._id}`);
 }
 
-export default addProperty;
+export default updateProperty;

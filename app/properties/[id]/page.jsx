@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import PropertyDetails from '@/components/PropertyDetails';
 import { FaArrowLeft } from 'react-icons/fa';
+import PropertyImages from '@/components/PropertyImages';
 
 const PropertyPage = async ({ params }) => {
   await connectDB();
@@ -24,7 +25,7 @@ const PropertyPage = async ({ params }) => {
         <div className="container-xl m-auto">
           <div className="grid grid-cols-1">
             <Image
-              src={`/images/properties/${property.images[0]}`}
+              src={property.images[0]}
               alt=""
               className="object-cover h-[400px] w-full"
               width={0}
@@ -52,6 +53,7 @@ const PropertyPage = async ({ params }) => {
           </div>
         </div>
       </section>
+      <PropertyImages images={property.images} />
     </>
   );
 };
