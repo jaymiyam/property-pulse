@@ -1,8 +1,43 @@
-const PropertyContactForm = () => {
+'use client';
+import { useActionState, useEffect } from 'react';
+import addMessage from '@/app/actions/addMessage';
+import { toast } from 'react-toastify';
+
+const PropertyContactForm = ({ property }) => {
+  const [state, formAction] = useActionState(addMessage, { submitted: false });
+
+  useEffect(() => {
+    if (state.error) {
+      toast.error(state.error);
+    } else if (state.submitted) {
+      toast.success('Message sent successfully');
+    }
+  }, [state]);
+
+  if (state.submitted) {
+    return (
+      <p className="text-green-500 mb-4">
+        Your message has been sent successfully
+      </p>
+    );
+  }
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
       <h3 className="text-xl font-bold mb-6">Contact Property Manager</h3>
-      <form>
+      <form action={formAction}>
+        <input
+          type="hidden"
+          id="recipient"
+          name="recipient"
+          defaultValue={property.owner}
+        />
+        <input
+          type="hidden"
+          id="property"
+          name="property"
+          defaultValue={property._id}
+        />
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"

@@ -17,12 +17,14 @@ const HomeProperties = async () => {
             <PropertyCard key={property._id} property={property} />
           ))}
         </div>
-        <Link
-          href="/properties"
-          className="block bg-black text-white text-center py-4 px-6 rounded-xl hover:bg-gray-700"
-        >
-          View all properties
-        </Link>
+        <div className="flex justify-center mt-6">
+          <Link
+            href="/properties"
+            className=" bg-black text-white text-center py-4 px-6 rounded-xl hover:bg-gray-700"
+          >
+            View all properties
+          </Link>
+        </div>
       </div>
     </section>
   );
