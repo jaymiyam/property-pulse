@@ -3,13 +3,18 @@ import Property from '@/models/Property';
 import Image from 'next/image';
 import Link from 'next/link';
 import PropertyDetails from '@/components/PropertyDetails';
-import { FaArrowLeft } from 'react-icons/fa';
 import PropertyImages from '@/components/PropertyImages';
+import BookmarkButton from '@/components/BookmarkButton';
+import ShareButtons from '@/components/ShareButtons';
+import PropertyContactForm from '@/components/PropertyContactForm';
+import { FaArrowLeft } from 'react-icons/fa';
+import { convertToSerializeableObject } from '@/utils/convertToObject';
 
 const PropertyPage = async ({ params }) => {
   await connectDB();
   const { id } = await params;
-  const property = await Property.findById(id).lean();
+  const propertyDoc = await Property.findById(id).lean();
+  const property = convertToSerializeableObject(propertyDoc);
 
   if (!property) {
     return (
@@ -50,6 +55,11 @@ const PropertyPage = async ({ params }) => {
         <div className="container m-auto py-10 px-6">
           <div className="grid grid-cols-1 md:grid-cols-[70%_28%] w-full gap-6">
             <PropertyDetails property={property} />
+            <aside className="space-y-4">
+              <BookmarkButton property={property} />
+              <ShareButtons property={property} />
+              <PropertyContactForm property={property} />
+            </aside>
           </div>
         </div>
       </section>
