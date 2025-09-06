@@ -29,6 +29,7 @@ const SearchResultsPage = async ({ searchParams }) => {
 
   const searchResultsDoc = await Property.find(query).lean();
   const searchResults = convertToSerializeableObject(searchResultsDoc);
+
   return (
     <section className="px-4 py-6">
       <div className="container m-auto py-6 px-6">
