@@ -6,6 +6,7 @@ import AuthProvider from '@/components/AuthProvider';
 import { GlobalContextProvider } from './context/GlobalContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import 'photoswipe/dist/photoswipe.css';
 
 const poppins = Poppins({
   variable: '--font-poppins',
